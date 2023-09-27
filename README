@@ -1,0 +1,54 @@
+## What it does?
+
+Is a POST endpoint on NodeJS, that receives an image(The description of the problem was a little confused, so it accepts the image) then is transformed to binary and then is saved on a local server 'static/imagesToQueue'.
+
+It has an aditional feature, it sends to a external server the image uploaded (you have to uncomment the code).
+
+## What is the name of the endpoint?
+
+/uploadImage
+
+You can call it on postman:
+
+or
+
+curl --location '127.0.0.1:3000/uploadImage' --form 'image=@"/path/of/the/image.jpg"'
+
+or
+
+    POST /uploadImage HTTP/1.1
+    Host: 127.0.0.1:3000
+    Content-Length: 198
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="image";
+    filename="nameoftheimage.png"
+    Content-Type: image/png
+
+    (data)
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+## Install
+
+1. npm run install
+
+## Run
+
+1. npm start
+
+## Test
+
+It has 2 basic unit test
+
+1. npm test
+
+# What libraries uses:
+
+- node
+- jest
+- multer
+
+# NOTES:
+
+start.js is the main file

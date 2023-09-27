@@ -1,0 +1,39 @@
+Hello!
+
+
+2. The excercise is done (upload to a local server) and in the README has the notes about how it runs, it has some unit test.
+3. To answer the questions:
+    3.1. I used this tools:
+        NodeJS to build the API
+        Jest to have unit testing
+        Multer to read the image and it gives more validations for this kind of files.
+        upload-js-full is the third party tool to send to an external server the images. (It is commented on the code because this was not asked to do)
+    3.2. How I think about uploading to S3 and the local queuing process to control aoutgoing upload rate?
+        I did a small graphic (attached here boweryUploadImages.jpg), I will explain based on that:
+        1. Endpoint /uploadImage-> it receives the images and transform it in binary and it sends to save to the API Server.
+        2. Static binary images-> is the Local Server where all the devices save the images at the moment (I assume it has a lot of memory).
+        3. Here I have 2 aproaches:
+            Both of them handles the images on local server.
+            3.1 Cron-> this cron it is programmed to run each time (to be calulated) and takes some images (to be calculated) from the Local Server to be saved on the AWS cloud S3.
+            3.2 Job Queue AWS-> this is a service of AWS(I have used Cloud Scheduler from GCP ) that is programed and do the same job the the Cron, but since this tool is designed to do that its more easy to handle concurrency and that staff.
+        4. S3 Service AWS-> where the images are going to be saved in buckets.
+        5. Monitoring, Alert-> In the question of how this behaviour is going to be monitor or observed. 
+            I propose:  
+                5. Dashboards-> using the AWS logs, see the progress of the queues, if it has errors or not. On those dashboards should be visible the programmed metrics.
+                6. Slack-> Based on the metrics above send an alert to any slack-channel or mail when it is detected the queue has many errors.
+4. Think about:
+    How I handle varying network speed, file,size and bandwith resource allocation?
+        Bandwith:
+            - the 100% of bandwith is 12000mbpm.
+            - the 20% of bandwith is   2400mbpm.
+            - Assuming 2000 images  are sent in 1 min it took 500mbpm.
+            So its not going to be allocated more than 20% of bandwith when the images are going to be sent it to process locally. In AWS we have to configure how many task we want to send in parallel.
+        File size:
+            - The endpoint validates the size of the images, we have to have a handshake regarding that, which is the max size admited.
+    How are you going to observe and monitor the system?
+        I added my answer in point 5 and 6.
+    How are you going yo maintain system stability after completion?
+        The endpoint doesnt need to much because it just receives images and save it. I just have to handle the memory of the local server ond validations of the image.
+        The programmed cron or queue in cloud should be monitored with the metrics described above.  
+
+    
